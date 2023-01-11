@@ -1,7 +1,8 @@
-package com.giussepr.zemoga
+package com.giussepr.zemoga.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.giussepr.zemoga.R
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
