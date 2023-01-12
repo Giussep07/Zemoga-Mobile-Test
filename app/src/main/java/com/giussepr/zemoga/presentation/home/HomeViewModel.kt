@@ -2,12 +2,11 @@ package com.giussepr.zemoga.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.giussepr.zemoga.domain.model.Post
 import com.giussepr.zemoga.domain.model.fold
 import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
+import com.giussepr.zemoga.presentation.model.UiPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class HomeViewModel @Inject constructor(private val getAllPostsUseCase: GetAllPo
 
   sealed class HomeUiState {
     object Loading : HomeUiState()
-    data class Success(val posts: List<Post>) : HomeUiState()
+    data class Success(val posts: List<UiPost>) : HomeUiState()
     data class Error(val message: String) : HomeUiState()
   }
 }

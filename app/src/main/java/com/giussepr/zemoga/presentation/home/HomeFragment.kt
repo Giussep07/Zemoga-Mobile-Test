@@ -10,8 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.giussepr.zemoga.databinding.FragmentHomeBinding
 import com.giussepr.zemoga.presentation.home.adapter.PostAdapter
+import com.giussepr.zemoga.presentation.model.UiPost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -66,9 +68,14 @@ class HomeFragment : Fragment() {
   }
 
   private fun setAdapter() {
-    adapter = PostAdapter().also {
+    adapter = PostAdapter(onPostClickListener = this::onPostClicked).also {
       binding.rvPosts.adapter = it
     }
+  }
+
+  private fun onPostClicked(uiPost: UiPost) {
+    val action = HomeFragmentDirections.actionHomeFragmentToPostDetailFragment(uiPost)
+    this.findNavController().navigate(action)
   }
 
 }

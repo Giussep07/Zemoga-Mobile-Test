@@ -1,5 +1,6 @@
 package com.giussepr.zemoga.core.di
 
+import com.giussepr.zemoga.domain.mapper.PostMapper
 import com.giussepr.zemoga.domain.repository.ZemogaRepository
 import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
 import dagger.Module
@@ -12,6 +13,9 @@ import dagger.hilt.android.components.ViewModelComponent
 object UseCaseModule {
 
   @Provides
-  fun provideGetPostsUseCase(zemogaRepository: ZemogaRepository) =
-    GetAllPostsUseCase(zemogaRepository)
+  fun providePostMapper(): PostMapper = PostMapper()
+
+  @Provides
+  fun provideGetPostsUseCase(zemogaRepository: ZemogaRepository, postMapper: PostMapper) =
+    GetAllPostsUseCase(zemogaRepository, postMapper)
 }
