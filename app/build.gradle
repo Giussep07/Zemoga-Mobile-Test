@@ -53,6 +53,9 @@ dependencies {
   kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
   // Retrofit
   implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+  // Loggin Interceptor
+  implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+  implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
   // JSON Converter
   implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
   testImplementation 'junit:junit:4.13.2'
