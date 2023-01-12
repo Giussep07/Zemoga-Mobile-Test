@@ -2,26 +2,38 @@ package com.giussepr.zemoga.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.giussepr.zemoga.domain.model.Post
 import com.giussepr.zemoga.domain.model.fold
 import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val getAllPostsUseCase: GetAllPostsUseCase) :
   ViewModel() {
 
+  private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
+  val uiState: StateFlow<HomeUiState>
+    get() = _uiState
+
   fun getAllPosts() {
     getAllPostsUseCase().map { result ->
       result.fold(
-        onSuccess = { posts -> println("All posts: $posts") },
+        onSuccess = { posts ->
+          _uiState.value = HomeUiState.Success(posts)
+        },
         onFailure = {
-          println("Error: ${it.message}")
+          _uiState.value = HomeUiState.Error(it.message)
         })
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+  }
+
+  sealed class HomeUiState {
+    object Loading : HomeUiState()
+    data class Success(val posts: List<Post>) : HomeUiState()
+    data class Error(val message: String) : HomeUiState()
   }
 }

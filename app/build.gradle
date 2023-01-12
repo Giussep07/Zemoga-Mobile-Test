@@ -33,6 +33,9 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+  viewBinding {
+    enabled = true
+  }
 }
 
 dependencies {
@@ -48,6 +51,7 @@ dependencies {
   // Lifecycle
   implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
   implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
   // Hilt
   implementation "com.google.dagger:hilt-android:$dagger_version"
   kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
