@@ -1,3 +1,6 @@
 <resources>
   <string name="app_name">Zemoga</string>
+  <string name="username">\@%1$s</string>
+  <string name="comments">Comments</string>
+  <string name="email_icon_content_description">email icon</string>
 </resources>

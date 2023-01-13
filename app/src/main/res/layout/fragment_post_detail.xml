@@ -1,13 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@color/background"
+  android:paddingHorizontal="16dp"
+  android:paddingTop="16dp"
   tools:context=".presentation.postdetail.PostDetailFragment">
 
-  <TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="Hello" />
+  <!-- Author information -->
+  <com.google.android.material.imageview.ShapeableImageView
+    android:id="@+id/ivAuthorPicture"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:background="@color/gray"
+    android:src="@drawable/ic_outline_person"
+    app:contentPadding="4dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Zemoga.CornerSize50Percent" />
 
-</FrameLayout>
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvAuthorName"
+    style="@style/TextAppearance.MaterialComponents.Subtitle2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    app:layout_constraintBottom_toTopOf="@+id/tvAuthorUsername"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/ivAuthorPicture"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:text="John Doe" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvAuthorUsername"
+    style="@style/TextAppearance.MaterialComponents.Caption"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="@id/ivAuthorPicture"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@id/tvAuthorName"
+    app:layout_constraintTop_toBottomOf="@+id/tvAuthorName"
+    tools:text="\@jhondoe" />
+
+  <!-- Author email -->
+  <ImageView
+    android:id="@+id/ivEmailIcon"
+    android:layout_width="16dp"
+    android:layout_height="16dp"
+    android:layout_marginTop="16dp"
+    android:contentDescription="@string/email_icon_content_description"
+    android:src="@drawable/ic_email"
+    app:layout_constraintBottom_toTopOf="@+id/tvAuthorEmail"
+    app:layout_constraintEnd_toEndOf="@id/tvAuthorEmail"
+    app:layout_constraintStart_toStartOf="@id/tvAuthorEmail"
+    app:layout_constraintTop_toBottomOf="@id/ivAuthorPicture"
+    app:tint="@color/gray" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvAuthorEmail"
+    style="@style/TextAppearance.MaterialComponents.Caption"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toStartOf="@+id/tvAuthorWeb"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/ivEmailIcon"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textAlignment="center"
+    tools:text="jhondoe@gmail.com" />
+
+  <!-- Author web -->
+  <ImageView
+    android:id="@+id/ivWebIcon"
+    android:layout_width="16dp"
+    android:layout_height="16dp"
+    android:layout_marginTop="16dp"
+    android:contentDescription="@string/email_icon_content_description"
+    android:src="@drawable/ic_public"
+    app:layout_constraintBottom_toTopOf="@+id/tvAuthorWeb"
+    app:layout_constraintEnd_toEndOf="@id/tvAuthorWeb"
+    app:layout_constraintStart_toStartOf="@id/tvAuthorWeb"
+    app:layout_constraintTop_toBottomOf="@id/ivAuthorPicture"
+    app:tint="@color/gray" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvAuthorWeb"
+    style="@style/TextAppearance.MaterialComponents.Caption"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/tvAuthorEmail"
+    app:layout_constraintTop_toBottomOf="@id/ivWebIcon"
+    android:maxLines="1"
+    android:textAlignment="center"
+    android:ellipsize="end"
+    tools:text="hildegard.org" />
+
+  <com.google.android.material.divider.MaterialDivider
+    android:id="@+id/divider"
+    android:layout_width="0dp"
+    android:layout_marginTop="16dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/tvAuthorEmail"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <!-- Post Title -->
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvPostTitle"
+    style="@style/TextAppearance.MaterialComponents.Headline6"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/divider"
+    tools:text="@tools:sample/lorem[10]" />
+
+  <!-- Post Body -->
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvPostBody"
+    style="@style/TextAppearance.MaterialComponents.Body1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvPostTitle"
+    tools:text="@tools:sample/lorem[20]" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvCommentsTitle"
+    style="@style/TextAppearance.MaterialComponents.Headline6"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:text="@string/comments"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvPostBody" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginTop="16dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvCommentsTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

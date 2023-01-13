@@ -2,6 +2,7 @@ package com.giussepr.zemoga.core.di
 
 import com.giussepr.zemoga.data.api.PlaceholderApi
 import com.giussepr.zemoga.data.mapper.PostResponseMapper
+import com.giussepr.zemoga.data.mapper.UserResponseMapper
 import com.giussepr.zemoga.data.repository.ZemogaRepositoryImpl
 import com.giussepr.zemoga.data.repository.datasource.remote.ZemogaRemoteDataSource
 import com.giussepr.zemoga.data.repository.datasource.remote.ZemogaRemoteDataSourceImpl
@@ -24,10 +25,14 @@ object RepositoryModule {
   fun providePostResponseMapper(): PostResponseMapper = PostResponseMapper()
 
   @Provides
+  fun provideUserResponseMapper(): UserResponseMapper = UserResponseMapper()
+
+  @Provides
   fun providePostRepository(
     zemogaRemoteDataSource: ZemogaRemoteDataSource,
-    postResponseMapper: PostResponseMapper
+    postResponseMapper: PostResponseMapper,
+    userResponseMapper: UserResponseMapper
   ): ZemogaRepository {
-    return ZemogaRepositoryImpl(zemogaRemoteDataSource, postResponseMapper)
+    return ZemogaRepositoryImpl(zemogaRemoteDataSource, postResponseMapper, userResponseMapper)
   }
 }
