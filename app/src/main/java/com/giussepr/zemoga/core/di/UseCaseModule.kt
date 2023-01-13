@@ -4,6 +4,7 @@ import com.giussepr.zemoga.domain.mapper.PostMapper
 import com.giussepr.zemoga.domain.repository.ZemogaRepository
 import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
 import com.giussepr.zemoga.domain.usecase.GetAuthorInformationUseCase
+import com.giussepr.zemoga.domain.usecase.GetCommentsByPostIdUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,4 +24,8 @@ object UseCaseModule {
   @Provides
   fun provideGetUserInformationUseCase(zemogaRepository: ZemogaRepository) =
     GetAuthorInformationUseCase(zemogaRepository)
+
+  @Provides
+  fun provideGetCommentsByPostIdUseCase(zemogaRepository: ZemogaRepository) =
+    GetCommentsByPostIdUseCase(zemogaRepository)
 }

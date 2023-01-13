@@ -3,4 +3,5 @@
   <string name="username">\@%1$s</string>
   <string name="comments">Comments</string>
   <string name="email_icon_content_description">email icon</string>
+  <string name="no_comments">No comments</string>
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <com.google.android.material.divider.MaterialDivider
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvComment" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvCommentEmail"
+    style="@style/TextAppearance.MaterialComponents.Caption"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="@id/tvCommentName"
+    app:layout_constraintStart_toStartOf="@id/tvCommentName"
+    app:layout_constraintTop_toBottomOf="@+id/tvCommentName"
+    tools:text="\@jhondoe" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvComment"
+    style="@style/TextAppearance.MaterialComponents.Caption"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvCommentEmail"
+    tools:text="@tools:sample/lorem[10]" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tvCommentName"
+    style="@style/TextAppearance.MaterialComponents.Subtitle2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:text="John Doe" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
