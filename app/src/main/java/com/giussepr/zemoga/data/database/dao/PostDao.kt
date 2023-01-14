@@ -1,9 +1,6 @@
 package com.giussepr.zemoga.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.giussepr.zemoga.data.database.entity.PostEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +12,9 @@ interface PostDao {
 
   @Insert
   suspend fun insert(post: PostEntity)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertAll(postList: List<PostEntity>)
 
   @Query("DELETE FROM post")
   suspend fun deleteAll()

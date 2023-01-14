@@ -1,39 +1,47 @@
 package com.giussepr.zemoga.data.repository
 
 import com.giussepr.zemoga.data.mapper.CommentResponseMapper
-import com.giussepr.zemoga.data.mapper.PostResponseMapper
+import com.giussepr.zemoga.data.mapper.PostDataMapper
 import com.giussepr.zemoga.data.mapper.UserResponseMapper
+import com.giussepr.zemoga.data.repository.datasource.local.ZemogaLocalDataSource
 import com.giussepr.zemoga.data.repository.datasource.remote.ZemogaRemoteDataSource
+import com.giussepr.zemoga.data.utils.NetworkUtils
 import com.giussepr.zemoga.domain.model.*
 import com.giussepr.zemoga.domain.repository.ZemogaRepository
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import kotlinx.coroutines.flow.flow
 
 class ZemogaRepositoryImpl @Inject constructor(
   private val zemogaRemoteDataSource: ZemogaRemoteDataSource,
-  private val postResponseMapper: PostResponseMapper,
+  private val zemogaLocalDataSource: ZemogaLocalDataSource,
+  private val postDataMapper: PostDataMapper,
   private val userResponseMapper: UserResponseMapper,
-  private val commentResponseMapper: CommentResponseMapper
+  private val commentResponseMapper: CommentResponseMapper,
+  private val networkUtils: NetworkUtils,
 ) : ZemogaRepository {
 
   override fun getAllPosts(): Flow<Result<List<Post>>> = flow {
     try {
-      val response = zemogaRemoteDataSource.getPosts()
 
-      if (response.isSuccessful) {
-        response.body()?.let { postResponseList ->
-          emit(Result.Success(postResponseList.map { postResponseMapper.mapToPostDomain(it) }))
-        } ?: emit(Result.Error(DomainException("Error getting posts")))
-      } else {
-        emit(
-          Result.Error(
-            DomainException(
-              response.errorBody()?.string() ?: "Something went wrong"
+      if (networkUtils.isInternetAvailable()) {
+        val response = zemogaRemoteDataSource.getPosts()
+
+        if (response.isSuccessful) {
+          response.body()?.let { postResponseList ->
+
+            // Delete all the posts from the local database
+            zemogaLocalDataSource.deleteAll()
+            // Insert the posts from the remote data source into the local database
+            zemogaLocalDataSource.insertAll(
+              postResponseList.map { postDataMapper.mapResponseToPostEntity(it) }
             )
-          )
-        )
+          }
+        }
       }
+
+      // Get the posts from the local database
+      emit(Result.Success(zemogaLocalDataSource.getAllPosts().first().map { postDataMapper.mapEntityToPostDomain(it) }))
+
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
     }
