@@ -17,4 +17,5 @@ interface ZemogaLocalDataSource {
   suspend fun saveUser(userEntity: UserEntity)
   suspend fun getUserById(userId: Int): UserEntity?
   suspend fun saveComments(commentList: List<CommentEntity>)
+  fun getCommentsByPostId(postId: Int): List<CommentEntity>
 }

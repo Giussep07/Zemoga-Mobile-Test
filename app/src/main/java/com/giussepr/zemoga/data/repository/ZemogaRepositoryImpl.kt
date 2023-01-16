@@ -100,22 +100,30 @@ class ZemogaRepositoryImpl @Inject constructor(
 
   override fun getCommentsByPostId(postId: Int): Flow<Result<List<Comment>>> = flow {
     try {
-      val response = zemogaRemoteDataSource.getCommentsByPostId(postId)
+      if (networkUtils.isInternetAvailable()) {
+        val response = zemogaRemoteDataSource.getCommentsByPostId(postId)
 
-      if (response.isSuccessful) {
-        response.body()?.let { commentsResponse ->
-          zemogaLocalDataSource.saveComments(commentsResponse.map { commentResponseMapper.mapResponseToEntity(it) })
+        if (response.isSuccessful) {
+          response.body()?.let { commentsResponse ->
+            zemogaLocalDataSource.saveComments(commentsResponse.map { commentResponseMapper.mapResponseToEntity(it) })
 
-          emit(Result.Success(commentsResponse.map { commentResponseMapper.mapToDomainComment(it) }))
-        } ?: emit(Result.Error(DomainException("Error getting comments")))
-      } else {
-        emit(
-          Result.Error(
-            DomainException(
-              response.errorBody()?.string() ?: "Something went wrong"
+            emit(Result.Success(commentsResponse.map { commentResponseMapper.mapToDomainComment(it) }))
+          } ?: emit(Result.Error(DomainException("Error getting comments")))
+        } else {
+          emit(
+            Result.Error(
+              DomainException(
+                response.errorBody()?.string() ?: "Something went wrong"
+              )
             )
           )
-        )
+        }
+      } else {
+        // Get the comments from the local database
+        val comments: List<Comment> = zemogaLocalDataSource.getCommentsByPostId(postId)
+          .map { commentResponseMapper.mapEntityToDomainComment(it) }
+
+        emit(Result.Success(comments))
       }
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))

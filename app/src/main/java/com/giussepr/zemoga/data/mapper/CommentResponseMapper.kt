@@ -23,4 +23,14 @@ class CommentResponseMapper {
       body = responseDTO.body
     )
   }
+
+  fun mapEntityToDomainComment(entity: CommentEntity): Comment {
+    return Comment(
+      postId = entity.postId,
+      id = entity.id,
+      name = entity.name,
+      email = entity.email,
+      body = entity.body
+    )
+  }
 }

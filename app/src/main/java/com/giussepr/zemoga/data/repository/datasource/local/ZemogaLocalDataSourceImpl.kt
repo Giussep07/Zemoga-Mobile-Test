@@ -58,4 +58,8 @@ class ZemogaLocalDataSourceImpl @Inject constructor(
   override suspend fun saveComments(commentList: List<CommentEntity>) {
     commentDao.insertAll(commentList)
   }
+
+  override fun getCommentsByPostId(postId: Int): List<CommentEntity> {
+    return commentDao.getCommentsByPostId(postId)
+  }
 }
