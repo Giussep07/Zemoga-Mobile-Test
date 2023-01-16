@@ -2,8 +2,11 @@ package com.giussepr.zemoga.presentation.postdetail
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.giussepr.zemoga.R
 import com.giussepr.zemoga.databinding.FragmentPostDetailBinding
@@ -41,9 +44,24 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
     observeUserInfoUiState()
     observeCommentUiState()
     observePostSavedAsFavorite()
+    observeDeletePostUiState()
 
     binding.ibFavorite.setOnClickListener {
       viewModel.onFavoriteClicked(args.uiPost)
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.details_menu, menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.action_delete_post -> {
+        showDeletePostDialog()
+        true
+      }
+      else -> super.onOptionsItemSelected(item)
     }
   }
 
@@ -109,17 +127,26 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
     }
   }
 
-  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-    inflater.inflate(R.menu.details_menu, menu)
+  private fun showDeletePostDialog() {
+    AlertDialog.Builder(requireContext())
+      .setMessage(getString(R.string.delete_post_confirmation))
+      .setPositiveButton(getString(R.string.ok)) { _,_ -> viewModel.onDeletePostClicked(args.uiPost) }
+      .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
+      .show()
   }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      R.id.action_delete_post -> {
-        viewModel.onDeletePostClicked(args.uiPost)
-        true
+  private fun observeDeletePostUiState() {
+    viewModel.deletePostUiState.collectWhileResumed {
+      when (it) {
+        is PostDetailViewModel.DeletePostUiState.Success -> {
+          Toast.makeText(requireContext(), getString(R.string.post_deleted), Toast.LENGTH_SHORT).show()
+          findNavController().navigateUp()
+        }
+        is PostDetailViewModel.DeletePostUiState.Error -> {
+          Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
       }
-      else -> super.onOptionsItemSelected(item)
     }
   }
 }

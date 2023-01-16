@@ -12,4 +12,5 @@ interface ZemogaRepository {
   fun getCommentsByPostId(postId: Int): Flow<Result<List<Comment>>>
   fun getLocalFavoritePostById(postId: Int): Flow<Result<Post?>>
   fun setPostAsFavorite(postId: Int, isFavorite: Boolean): Flow<Result<Boolean>>
+  fun deletePost(postId: Int): Flow<Result<Boolean>>
 }

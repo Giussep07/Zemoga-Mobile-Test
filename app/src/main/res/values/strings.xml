@@ -5,4 +5,8 @@
   <string name="email_icon_content_description">email icon</string>
   <string name="no_comments">No comments</string>
   <string name="delete_post">Delete Post</string>
+  <string name="delete_post_confirmation">Are you sure you want to delete this post?</string>
+  <string name="ok">Yes</string>
+  <string name="cancel">Cancel</string>
+  <string name="post_deleted">Post successfully deleted</string>
 </resources>

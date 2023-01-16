@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.giussepr.zemoga.domain.model.Comment
 import com.giussepr.zemoga.domain.model.User
 import com.giussepr.zemoga.domain.model.fold
-import com.giussepr.zemoga.domain.usecase.CheckIfPostIsFavoriteUseCase
-import com.giussepr.zemoga.domain.usecase.GetAuthorInformationUseCase
-import com.giussepr.zemoga.domain.usecase.GetCommentsByPostIdUseCase
-import com.giussepr.zemoga.domain.usecase.SetPostAsFavoriteUseCase
+import com.giussepr.zemoga.domain.usecase.*
 import com.giussepr.zemoga.presentation.model.UiPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +17,8 @@ class PostDetailViewModel @Inject constructor(
   private val getAuthorInformationUseCase: GetAuthorInformationUseCase,
   private val getCommentsByPostIdUseCase: GetCommentsByPostIdUseCase,
   private val checkIfPostIsFavoriteUseCase: CheckIfPostIsFavoriteUseCase,
-  private val setPostAsFavoriteUseCase: SetPostAsFavoriteUseCase
+  private val setPostAsFavoriteUseCase: SetPostAsFavoriteUseCase,
+  private val deletePostUseCase: DeletePostUseCase,
 ) : ViewModel() {
 
   private val _userInformationUiState: MutableStateFlow<UserInformationUiState> =
@@ -37,6 +35,11 @@ class PostDetailViewModel @Inject constructor(
     MutableStateFlow(false)
   val postIsFavorite: StateFlow<Boolean>
     get() = _postIsFavorite
+
+  private val _deletePostUiState: MutableStateFlow<DeletePostUiState> =
+    MutableStateFlow(DeletePostUiState.Idle)
+  val deletePostUiState: StateFlow<DeletePostUiState>
+    get() = _deletePostUiState
 
   fun init(post: UiPost) {
     checkIfPostIsFavorite(post.id)
@@ -80,7 +83,12 @@ class PostDetailViewModel @Inject constructor(
   }
 
   fun onDeletePostClicked(uiPost: UiPost) {
-    // TODO: delete post
+    deletePostUseCase(uiPost.id).map { result ->
+      result.fold(
+        onSuccess = { _deletePostUiState.value = DeletePostUiState.Success },
+        onFailure = { _deletePostUiState.value = DeletePostUiState.Error(it.message) }
+      )
+    }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
   sealed class UserInformationUiState {
@@ -93,5 +101,11 @@ class PostDetailViewModel @Inject constructor(
     object Loading : CommentsUiState()
     data class Success(val comments: List<Comment>) : CommentsUiState()
     data class Error(val message: String) : CommentsUiState()
+  }
+
+  sealed class DeletePostUiState {
+    object Idle : DeletePostUiState()
+    object Success : DeletePostUiState()
+    data class Error(val message: String) : DeletePostUiState()
   }
 }
