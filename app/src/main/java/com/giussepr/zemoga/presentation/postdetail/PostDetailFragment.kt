@@ -130,7 +130,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
   private fun showDeletePostDialog() {
     AlertDialog.Builder(requireContext())
       .setMessage(getString(R.string.delete_post_confirmation))
-      .setPositiveButton(getString(R.string.ok)) { _,_ -> viewModel.onDeletePostClicked(args.uiPost) }
+      .setPositiveButton(getString(R.string.yes)) { _, _ -> viewModel.onDeletePostClicked(args.uiPost) }
       .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
       .show()
   }

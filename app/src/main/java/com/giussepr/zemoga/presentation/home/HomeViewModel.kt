@@ -30,6 +30,9 @@ class HomeViewModel @Inject constructor(private val getAllPostsUseCase: GetAllPo
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
+  fun onDeleteAllPostsClicked() {
+    TODO("Not yet implemented")  }
+
   sealed class HomeUiState {
     object Loading : HomeUiState()
     data class Success(val posts: List<UiPost>) : HomeUiState()

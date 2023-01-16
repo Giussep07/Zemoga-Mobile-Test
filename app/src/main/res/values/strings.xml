@@ -6,7 +6,9 @@
   <string name="no_comments">No comments</string>
   <string name="delete_post">Delete Post</string>
   <string name="delete_post_confirmation">Are you sure you want to delete this post?</string>
-  <string name="ok">Yes</string>
+  <string name="yes">Yes</string>
   <string name="cancel">Cancel</string>
   <string name="post_deleted">Post successfully deleted</string>
+  <string name="delete_all_posts">Delete all posts</string>
+  <string name="delete_all_posts_confirmation">Are you sure you want to delete all posts?</string>
 </resources>

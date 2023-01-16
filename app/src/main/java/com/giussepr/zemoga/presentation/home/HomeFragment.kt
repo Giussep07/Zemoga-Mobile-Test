@@ -1,16 +1,16 @@
 package com.giussepr.zemoga.presentation.home
 
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.giussepr.zemoga.R
 import com.giussepr.zemoga.databinding.FragmentHomeBinding
 import com.giussepr.zemoga.presentation.home.adapter.PostAdapter
 import com.giussepr.zemoga.presentation.model.UiPost
@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
+    setHasOptionsMenu(true)
     _binding = FragmentHomeBinding.inflate(inflater, container, false)
     return binding.root
   }
@@ -67,6 +68,20 @@ class HomeFragment : Fragment() {
     super.onDestroyView()
   }
 
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.home_menu, menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.action_delete_post -> {
+        showDeleteAllPostsDialog()
+        true
+      }
+      else -> super.onOptionsItemSelected(item)
+    }
+  }
+
   private fun setAdapter() {
     adapter = PostAdapter(context = requireContext(), onPostClickListener = this::onPostClicked).also {
       binding.rvPosts.adapter = it
@@ -76,6 +91,14 @@ class HomeFragment : Fragment() {
   private fun onPostClicked(uiPost: UiPost) {
     val action = HomeFragmentDirections.actionHomeFragmentToPostDetailFragment(uiPost)
     this.findNavController().navigate(action)
+  }
+
+  private fun showDeleteAllPostsDialog() {
+    AlertDialog.Builder(requireContext())
+      .setMessage(getString(R.string.delete_all_posts_confirmation))
+      .setPositiveButton(getString(R.string.yes)) { _, _ -> viewModel.onDeleteAllPostsClicked() }
+      .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
+      .show()
   }
 
 }
