@@ -51,6 +51,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         showDeleteAllPostsDialog()
         true
       }
+      R.id.action_load_all_posts -> {
+        viewModel.getAllPosts(forceRefresh = true)
+        true
+      }
       else -> super.onOptionsItemSelected(item)
     }
   }

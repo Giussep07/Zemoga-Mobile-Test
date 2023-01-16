@@ -11,4 +11,5 @@
   <string name="post_deleted">Post successfully deleted</string>
   <string name="delete_all_posts">Delete all posts</string>
   <string name="delete_all_posts_confirmation">Are you sure you want to delete all posts?</string>
+  <string name="load_all_posts">Load all posts</string>
 </resources>

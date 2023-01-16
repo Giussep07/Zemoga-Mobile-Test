@@ -21,7 +21,7 @@ class ZemogaRepositoryImpl @Inject constructor(
   private val networkUtils: NetworkUtils,
 ) : ZemogaRepository {
 
-  override fun getAllPosts(): Flow<Result<List<Post>>> = flow {
+  override fun getAllPosts(forceRefresh: Boolean): Flow<Result<List<Post>>> = flow {
     try {
 
       // Get all posts from local database
@@ -30,7 +30,7 @@ class ZemogaRepositoryImpl @Inject constructor(
       // Check if the cache is valid
       val cacheIsExpired = cacheIsExpired(lastUpdate)
 
-      if (networkUtils.isInternetAvailable() && cacheIsExpired) {
+      if (networkUtils.isInternetAvailable() && cacheIsExpired || forceRefresh) {
         val response = zemogaRemoteDataSource.getPosts()
 
         if (response.isSuccessful) {
@@ -138,6 +138,16 @@ class ZemogaRepositoryImpl @Inject constructor(
     try {
       zemogaLocalDataSource.deleteAllExceptFavorites()
       emit(Result.Success(true))
+    } catch (e: Exception) {
+      emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
+    }
+  }
+
+  override fun getLocalPosts(): Flow<Result<List<Post>>> = flow {
+    try {
+      emit(
+        Result.Success(zemogaLocalDataSource.getAllPosts().first().map { postDataMapper.mapEntityToPostDomain(it) })
+      )
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
     }

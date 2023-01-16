@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.giussepr.zemoga.domain.model.fold
 import com.giussepr.zemoga.domain.usecase.DeleteAllPostsUseCase
 import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
+import com.giussepr.zemoga.domain.usecase.GetLocalPostsUseCase
 import com.giussepr.zemoga.presentation.model.UiPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
   private val getAllPostsUseCase: GetAllPostsUseCase,
-  private val deleteAllPostsUseCase: DeleteAllPostsUseCase
+  private val deleteAllPostsUseCase: DeleteAllPostsUseCase,
+  private val getLocalPostsUseCase: GetLocalPostsUseCase
 ) : ViewModel() {
 
   private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
@@ -26,8 +28,8 @@ class HomeViewModel @Inject constructor(
   val deleteAllPostsUiState: StateFlow<DeleteAllPostsUiState>
     get() = _deleteAllPostsUiState
 
-  fun getAllPosts() {
-    getAllPostsUseCase().map { result ->
+  fun getAllPosts(forceRefresh: Boolean = false) {
+    getAllPostsUseCase(forceRefresh).map { result ->
       result.fold(
         onSuccess = { posts ->
           _uiState.value = HomeUiState.Success(posts)
@@ -41,8 +43,20 @@ class HomeViewModel @Inject constructor(
   fun onDeleteAllPostsClicked() {
     deleteAllPostsUseCase().map { result ->
       result.fold(
-        onSuccess = { getAllPosts() },
+        onSuccess = { getAllLocalPosts() },
         onFailure = { _deleteAllPostsUiState.value = DeleteAllPostsUiState.Error(it.message) })
+    }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+  }
+
+  private fun getAllLocalPosts() {
+    getLocalPostsUseCase().map { result ->
+      result.fold(
+        onSuccess = { posts ->
+          _uiState.value = HomeUiState.Success(posts)
+        },
+        onFailure = {
+          _uiState.value = HomeUiState.Error(it.message)
+        })
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
