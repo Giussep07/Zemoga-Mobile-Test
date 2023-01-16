@@ -79,6 +79,10 @@ class PostDetailViewModel @Inject constructor(
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
+  fun onDeletePostClicked(uiPost: UiPost) {
+    // TODO: delete post
+  }
+
   sealed class UserInformationUiState {
     object Loading : UserInformationUiState()
     data class Success(val user: User) : UserInformationUiState()

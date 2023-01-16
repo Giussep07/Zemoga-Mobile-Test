@@ -133,6 +133,6 @@ class ZemogaRepositoryImpl @Inject constructor(
   }
 
   companion object {
-    private val DEFAULT_REFRESH_RATE_MS = TimeUnit.MINUTES.toMillis(60)
+    private val DEFAULT_REFRESH_RATE_MS = TimeUnit.DAYS.toMillis(1)
   }
 }

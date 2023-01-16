@@ -1,9 +1,7 @@
 package com.giussepr.zemoga.presentation.postdetail
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -26,6 +24,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
     inflater: LayoutInflater,
     container: ViewGroup?
   ): FragmentPostDetailBinding {
+    setHasOptionsMenu(true)
     return FragmentPostDetailBinding.inflate(inflater, container, false)
   }
 
@@ -107,6 +106,20 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
       } else {
         binding.ibFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_favorite_border, requireContext().theme))
       }
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.details_menu, menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.action_delete_post -> {
+        viewModel.onDeletePostClicked(args.uiPost)
+        true
+      }
+      else -> super.onOptionsItemSelected(item)
     }
   }
 }

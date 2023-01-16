@@ -4,4 +4,5 @@
   <string name="comments">Comments</string>
   <string name="email_icon_content_description">email icon</string>
   <string name="no_comments">No comments</string>
+  <string name="delete_post">Delete Post</string>
 </resources>
