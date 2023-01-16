@@ -19,6 +19,7 @@ class PostDetailViewModel @Inject constructor(
   private val checkIfPostIsFavoriteUseCase: CheckIfPostIsFavoriteUseCase,
   private val setPostAsFavoriteUseCase: SetPostAsFavoriteUseCase,
   private val deletePostUseCase: DeletePostUseCase,
+  private val _postIsFavorite: MutableStateFlow<Boolean>
 ) : ViewModel() {
 
   private val _userInformationUiState: MutableStateFlow<UserInformationUiState> =
@@ -31,8 +32,6 @@ class PostDetailViewModel @Inject constructor(
   val commentUiState: StateFlow<CommentsUiState>
     get() = _commentUiState
 
-  private val _postIsFavorite: MutableStateFlow<Boolean> =
-    MutableStateFlow(false)
   val postIsFavorite: StateFlow<Boolean>
     get() = _postIsFavorite
 
@@ -73,7 +72,7 @@ class PostDetailViewModel @Inject constructor(
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
-  private fun checkIfPostIsFavorite(postId: Int) {
+  fun checkIfPostIsFavorite(postId: Int) {
     checkIfPostIsFavoriteUseCase(postId).map { result ->
       result.fold(
         onSuccess = { _postIsFavorite.value = it },
