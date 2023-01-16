@@ -9,6 +9,7 @@ import com.giussepr.zemoga.data.utils.NetworkUtils
 import com.giussepr.zemoga.domain.model.*
 import com.giussepr.zemoga.domain.repository.ZemogaRepository
 import kotlinx.coroutines.flow.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ZemogaRepositoryImpl @Inject constructor(
@@ -23,7 +24,13 @@ class ZemogaRepositoryImpl @Inject constructor(
   override fun getAllPosts(): Flow<Result<List<Post>>> = flow {
     try {
 
-      if (networkUtils.isInternetAvailable()) {
+      // Get all posts from local database
+      val localPosts = zemogaLocalDataSource.getAllPosts().first()
+
+      // Check if the cache is valid
+      val cacheIsExpired = cacheIsExpired(localPosts.last().createdAt)
+
+      if (networkUtils.isInternetAvailable() && cacheIsExpired) {
         val response = zemogaRemoteDataSource.getPosts()
 
         if (response.isSuccessful) {
@@ -40,7 +47,11 @@ class ZemogaRepositoryImpl @Inject constructor(
       }
 
       // Get the posts from the local database
-      emit(Result.Success(zemogaLocalDataSource.getAllPosts().first().map { postDataMapper.mapEntityToPostDomain(it) }))
+      emit(
+        Result.Success(
+          zemogaLocalDataSource.getAllPosts().first()
+            .map { postDataMapper.mapEntityToPostDomain(it) })
+      )
 
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
@@ -93,5 +104,16 @@ class ZemogaRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
     }
+  }
+
+  private fun cacheIsExpired(lastUpdate: Long): Boolean {
+    val currentTime = System.currentTimeMillis()
+    val cacheTime = currentTime - lastUpdate
+
+    return cacheTime > DEFAULT_REFRESH_RATE_MS
+  }
+
+  companion object {
+    private val DEFAULT_REFRESH_RATE_MS = TimeUnit.MINUTES.toMillis(10)
   }
 }

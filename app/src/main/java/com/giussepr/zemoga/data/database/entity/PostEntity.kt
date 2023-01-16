@@ -17,5 +17,7 @@ data class PostEntity(
   @ColumnInfo(name = "body")
   val body: String,
   @ColumnInfo(name = "is_favorite")
-  val isFavorite: Boolean = false
+  val isFavorite: Boolean = false,
+  @ColumnInfo(name = "created_at")
+  val createdAt: Long = System.currentTimeMillis()
 )
