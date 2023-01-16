@@ -11,4 +11,5 @@ interface ZemogaLocalDataSource {
   suspend fun getFavoritePostById(postId: Int): PostEntity?
   suspend fun setPostAsFavorite(postId: Int, isFavorite: Boolean)
   suspend fun deletePost(postId: Int)
+  suspend fun deleteAllExceptFavorites()
 }

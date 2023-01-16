@@ -26,5 +26,8 @@ interface PostDao {
   suspend fun setPostAsFavorite(postId: Int, isFavorite: Boolean)
 
   @Query("DELETE FROM post WHERE post_id = :postId")
-  fun deletePost(postId: Int)
+  suspend fun deletePost(postId: Int)
+
+  @Query("DELETE FROM post WHERE is_favorite = 0")
+  suspend fun deleteAllExceptFavorites()
 }

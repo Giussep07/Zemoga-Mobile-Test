@@ -35,4 +35,8 @@ class ZemogaLocalDataSourceImpl @Inject constructor(private val postDao: PostDao
   override suspend fun deletePost(postId: Int) {
     postDao.deletePost(postId)
   }
+
+  override suspend fun deleteAllExceptFavorites() {
+    postDao.deleteAllExceptFavorites()
+  }
 }

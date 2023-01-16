@@ -2,6 +2,7 @@ package com.giussepr.zemoga.presentation.home
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
@@ -12,60 +13,32 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.giussepr.zemoga.R
 import com.giussepr.zemoga.databinding.FragmentHomeBinding
+import com.giussepr.zemoga.presentation.base.BaseFragment
 import com.giussepr.zemoga.presentation.home.adapter.PostAdapter
 import com.giussepr.zemoga.presentation.model.UiPost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
   private val viewModel: HomeViewModel by viewModels()
 
   private lateinit var adapter: PostAdapter
 
-  private var _binding: FragmentHomeBinding? = null
-  private val binding get() = _binding!!
-
-  override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
     setHasOptionsMenu(true)
-    _binding = FragmentHomeBinding.inflate(inflater, container, false)
-    return binding.root
+    return FragmentHomeBinding.inflate(inflater, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     viewModel.getAllPosts()
 
-    viewLifecycleOwner.lifecycleScope.launch {
-      viewModel.uiState.flowWithLifecycle(
-        viewLifecycleOwner.lifecycle,
-        minActiveState = Lifecycle.State.RESUMED
-      ).collect {
-        when (it) {
-          is HomeViewModel.HomeUiState.Loading -> {
-            binding.progressBar.isVisible = true
-          }
-          is HomeViewModel.HomeUiState.Success -> {
-            binding.progressBar.isVisible = false
-            adapter.setData(it.posts)
-          }
-          is HomeViewModel.HomeUiState.Error -> {
-            binding.progressBar.visibility = View.GONE
-          }
-        }
-      }
-    }
+    observeHomeUiState()
+    observeDeleteAllPostsUiState()
 
     setAdapter()
-  }
-
-  override fun onDestroyView() {
-    _binding = null
-    super.onDestroyView()
   }
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -74,7 +47,7 @@ class HomeFragment : Fragment() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
-      R.id.action_delete_post -> {
+      R.id.action_delete_all -> {
         showDeleteAllPostsDialog()
         true
       }
@@ -99,6 +72,34 @@ class HomeFragment : Fragment() {
       .setPositiveButton(getString(R.string.yes)) { _, _ -> viewModel.onDeleteAllPostsClicked() }
       .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
       .show()
+  }
+
+  private fun observeHomeUiState() {
+    viewModel.uiState.collectWhileResumed {
+      when (it) {
+        is HomeViewModel.HomeUiState.Loading -> {
+          binding.progressBar.isVisible = true
+        }
+        is HomeViewModel.HomeUiState.Success -> {
+          binding.progressBar.isVisible = false
+          adapter.setData(it.posts)
+        }
+        is HomeViewModel.HomeUiState.Error -> {
+          binding.progressBar.visibility = View.GONE
+        }
+      }
+    }
+  }
+
+  private fun observeDeleteAllPostsUiState() {
+    viewModel.deleteAllPostsUiState.collectWhileResumed {
+      when (it) {
+        is HomeViewModel.DeleteAllPostsUiState.Error -> {
+          Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+      }
+    }
   }
 
 }

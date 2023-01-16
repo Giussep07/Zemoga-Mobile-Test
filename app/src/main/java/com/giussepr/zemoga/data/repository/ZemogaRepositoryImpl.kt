@@ -134,6 +134,15 @@ class ZemogaRepositoryImpl @Inject constructor(
     }
   }
 
+  override fun deleteAllPosts(): Flow<Result<Boolean>> = flow {
+    try {
+      zemogaLocalDataSource.deleteAllExceptFavorites()
+      emit(Result.Success(true))
+    } catch (e: Exception) {
+      emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
+    }
+  }
+
   private fun cacheIsExpired(lastUpdate: Long): Boolean {
     val currentTime = System.currentTimeMillis()
     val cacheTime = currentTime - lastUpdate
