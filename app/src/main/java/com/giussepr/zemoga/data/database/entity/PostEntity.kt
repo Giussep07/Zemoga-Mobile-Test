@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "post")
+@Entity(tableName = "post", indices = [androidx.room.Index(value = ["post_id"], unique = true)])
 data class PostEntity(
   @PrimaryKey(autoGenerate = true)
   val id: Int = 0,

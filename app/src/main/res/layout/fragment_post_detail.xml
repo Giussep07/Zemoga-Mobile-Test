@@ -26,6 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.Group
+          android:id="@+id/groupAuthor"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:constraint_referenced_ids="ivAuthorPicture,tvAuthorName,tvAuthorUsername,ivEmailIcon,ivWebIcon,tvAuthorEmail"/>
+
         <!-- Author information -->
         <com.google.android.material.imageview.ShapeableImageView
           android:id="@+id/ivAuthorPicture"

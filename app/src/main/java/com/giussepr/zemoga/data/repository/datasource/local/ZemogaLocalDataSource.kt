@@ -1,6 +1,7 @@
 package com.giussepr.zemoga.data.repository.datasource.local
 
 import com.giussepr.zemoga.data.database.entity.PostEntity
+import com.giussepr.zemoga.data.database.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 interface ZemogaLocalDataSource {
@@ -12,4 +13,6 @@ interface ZemogaLocalDataSource {
   suspend fun setPostAsFavorite(postId: Int, isFavorite: Boolean)
   suspend fun deletePost(postId: Int)
   suspend fun deleteAllExceptFavorites()
+  suspend fun saveUser(userEntity: UserEntity)
+  suspend fun getUserById(userId: Int): UserEntity?
 }

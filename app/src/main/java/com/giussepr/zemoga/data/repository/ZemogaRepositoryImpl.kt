@@ -1,5 +1,6 @@
 package com.giussepr.zemoga.data.repository
 
+import com.giussepr.zemoga.data.database.entity.UserEntity
 import com.giussepr.zemoga.data.mapper.CommentResponseMapper
 import com.giussepr.zemoga.data.mapper.PostDataMapper
 import com.giussepr.zemoga.data.mapper.UserResponseMapper
@@ -60,24 +61,37 @@ class ZemogaRepositoryImpl @Inject constructor(
 
   override fun getUserInformation(userId: Int): Flow<Result<User>> = flow {
     try {
-      val response = zemogaRemoteDataSource.getUserInfo(userId)
 
-      if (response.isSuccessful) {
-        response.body()?.let { userResponse ->
-          if (userResponse.isNotEmpty()) {
-            emit(Result.Success(userResponseMapper.mapToDomainUser(userResponse.first())))
-          } else {
-            emit(Result.Error(DomainException("user information not found")))
-          }
-        } ?: emit(Result.Error(DomainException("Error getting user information")))
-      } else {
-        emit(
-          Result.Error(
-            DomainException(
-              response.errorBody()?.string() ?: "Something went wrong"
+      if (networkUtils.isInternetAvailable()) {
+
+        val response = zemogaRemoteDataSource.getUserInfo(userId)
+
+        if (response.isSuccessful) {
+          response.body()?.let { userResponse ->
+            if (userResponse.isNotEmpty()) {
+              zemogaLocalDataSource.saveUser(userResponseMapper.mapResponseUserToEntity(userResponse.first()))
+              emit(Result.Success(userResponseMapper.mapToDomainUser(userResponse.first())))
+            } else {
+              emit(Result.Error(DomainException("user information not found")))
+            }
+          } ?: emit(Result.Error(DomainException("Error getting user information")))
+        } else {
+          emit(
+            Result.Error(
+              DomainException(
+                response.errorBody()?.string() ?: "Something went wrong"
+              )
             )
           )
-        )
+        }
+      } else {
+        // Get the user from the local database
+        val user: UserEntity? = zemogaLocalDataSource.getUserById(userId)
+        if (user != null) {
+          emit(Result.Success(userResponseMapper.mapEntityToDomainUser(user)))
+        } else {
+          emit(Result.Error(DomainException("user information not found")))
+        }
       }
     } catch (e: Exception) {
       emit(Result.Error(DomainException(e.message ?: "Something went wrong")))

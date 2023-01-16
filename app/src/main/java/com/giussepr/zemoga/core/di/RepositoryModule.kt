@@ -3,6 +3,7 @@ package com.giussepr.zemoga.core.di
 import android.content.Context
 import com.giussepr.zemoga.data.api.PlaceholderApi
 import com.giussepr.zemoga.data.database.dao.PostDao
+import com.giussepr.zemoga.data.database.dao.UserDao
 import com.giussepr.zemoga.data.mapper.CommentResponseMapper
 import com.giussepr.zemoga.data.mapper.PostDataMapper
 import com.giussepr.zemoga.data.mapper.UserResponseMapper
@@ -29,8 +30,8 @@ object RepositoryModule {
   }
 
   @Provides
-  fun provideZemogaLocalDataSource(postDao: PostDao): ZemogaLocalDataSource {
-    return ZemogaLocalDataSourceImpl(postDao)
+  fun provideZemogaLocalDataSource(postDao: PostDao, userDao: UserDao): ZemogaLocalDataSource {
+    return ZemogaLocalDataSourceImpl(postDao, userDao)
   }
 
   @Provides

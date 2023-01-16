@@ -90,7 +90,8 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
           binding.tvAuthorWeb.text = it.user.website
         }
         is PostDetailViewModel.UserInformationUiState.Error -> {
-          binding.shimmerLayout.stopShimmer()
+          binding.shimmerLayout.hideShimmer()
+          binding.groupAuthor.isVisible = false
         }
       }
     }

@@ -1,12 +1,16 @@
 package com.giussepr.zemoga.data.repository.datasource.local
 
 import com.giussepr.zemoga.data.database.dao.PostDao
+import com.giussepr.zemoga.data.database.dao.UserDao
 import com.giussepr.zemoga.data.database.entity.PostEntity
+import com.giussepr.zemoga.data.database.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ZemogaLocalDataSourceImpl @Inject constructor(private val postDao: PostDao) :
-  ZemogaLocalDataSource {
+class ZemogaLocalDataSourceImpl @Inject constructor(
+  private val postDao: PostDao,
+  private val userDao: UserDao
+) : ZemogaLocalDataSource {
 
   override fun getAllPosts(): Flow<List<PostEntity>> {
     return postDao.getAll()
@@ -38,5 +42,13 @@ class ZemogaLocalDataSourceImpl @Inject constructor(private val postDao: PostDao
 
   override suspend fun deleteAllExceptFavorites() {
     postDao.deleteAllExceptFavorites()
+  }
+
+  override suspend fun saveUser(userEntity: UserEntity) {
+    userDao.insert(userEntity)
+  }
+
+  override suspend fun getUserById(userId: Int): UserEntity? {
+    return userDao.getUserById(userId)
   }
 }

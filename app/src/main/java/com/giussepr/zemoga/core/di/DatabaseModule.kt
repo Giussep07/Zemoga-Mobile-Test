@@ -27,4 +27,7 @@ object DatabaseModule {
 
   @Provides
   fun providePostDao(zemogaDatabase: ZemogaDatabase) = zemogaDatabase.postDao()
+
+  @Provides
+  fun provideUserDao(zemogaDatabase: ZemogaDatabase) = zemogaDatabase.userDao()
 }
