@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
     }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
   }
 
-  private fun getAllLocalPosts() {
+  fun getAllLocalPosts() {
     getLocalPostsUseCase().map { result ->
       result.fold(
         onSuccess = { posts ->
