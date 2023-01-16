@@ -30,4 +30,7 @@ object DatabaseModule {
 
   @Provides
   fun provideUserDao(zemogaDatabase: ZemogaDatabase) = zemogaDatabase.userDao()
+
+  @Provides
+  fun provideCommentDao(zemogaDatabase: ZemogaDatabase) = zemogaDatabase.commentDao()
 }

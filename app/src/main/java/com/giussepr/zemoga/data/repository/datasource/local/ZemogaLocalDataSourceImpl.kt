@@ -1,7 +1,9 @@
 package com.giussepr.zemoga.data.repository.datasource.local
 
+import com.giussepr.zemoga.data.database.dao.CommentDao
 import com.giussepr.zemoga.data.database.dao.PostDao
 import com.giussepr.zemoga.data.database.dao.UserDao
+import com.giussepr.zemoga.data.database.entity.CommentEntity
 import com.giussepr.zemoga.data.database.entity.PostEntity
 import com.giussepr.zemoga.data.database.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +11,8 @@ import javax.inject.Inject
 
 class ZemogaLocalDataSourceImpl @Inject constructor(
   private val postDao: PostDao,
-  private val userDao: UserDao
+  private val userDao: UserDao,
+  private val commentDao: CommentDao
 ) : ZemogaLocalDataSource {
 
   override fun getAllPosts(): Flow<List<PostEntity>> {
@@ -50,5 +53,9 @@ class ZemogaLocalDataSourceImpl @Inject constructor(
 
   override suspend fun getUserById(userId: Int): UserEntity? {
     return userDao.getUserById(userId)
+  }
+
+  override suspend fun saveComments(commentList: List<CommentEntity>) {
+    commentDao.insertAll(commentList)
   }
 }

@@ -104,6 +104,8 @@ class ZemogaRepositoryImpl @Inject constructor(
 
       if (response.isSuccessful) {
         response.body()?.let { commentsResponse ->
+          zemogaLocalDataSource.saveComments(commentsResponse.map { commentResponseMapper.mapResponseToEntity(it) })
+
           emit(Result.Success(commentsResponse.map { commentResponseMapper.mapToDomainComment(it) }))
         } ?: emit(Result.Error(DomainException("Error getting comments")))
       } else {
