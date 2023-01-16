@@ -17,12 +17,21 @@
     <com.google.android.material.textview.MaterialTextView
       android:id="@+id/tvPostTitle"
       style="@style/TextAppearance.MaterialComponents.Headline6"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/ivFavorite"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       tools:text="@tools:sample/lorem[10]" />
+
+    <ImageView
+      android:id="@+id/ivFavorite"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:tint="@color/gray"
+      tools:src="@drawable/ic_favorite_border" />
 
     <!-- Body -->
     <com.google.android.material.textview.MaterialTextView

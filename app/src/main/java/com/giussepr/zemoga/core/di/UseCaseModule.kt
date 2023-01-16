@@ -2,9 +2,7 @@ package com.giussepr.zemoga.core.di
 
 import com.giussepr.zemoga.domain.mapper.PostMapper
 import com.giussepr.zemoga.domain.repository.ZemogaRepository
-import com.giussepr.zemoga.domain.usecase.GetAllPostsUseCase
-import com.giussepr.zemoga.domain.usecase.GetAuthorInformationUseCase
-import com.giussepr.zemoga.domain.usecase.GetCommentsByPostIdUseCase
+import com.giussepr.zemoga.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,4 +26,12 @@ object UseCaseModule {
   @Provides
   fun provideGetCommentsByPostIdUseCase(zemogaRepository: ZemogaRepository) =
     GetCommentsByPostIdUseCase(zemogaRepository)
+
+  @Provides
+  fun provideCheckIfPostIsFavoriteUseCase(zemogaRepository: ZemogaRepository) =
+    CheckIfPostIsFavoriteUseCase(zemogaRepository)
+
+  @Provides
+  fun provideSetPostAsFavoriteUseCase(zemogaRepository: ZemogaRepository) =
+    SetPostAsFavoriteUseCase(zemogaRepository)
 }

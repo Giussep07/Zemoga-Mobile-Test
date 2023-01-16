@@ -23,4 +23,12 @@ class ZemogaLocalDataSourceImpl @Inject constructor(private val postDao: PostDao
   override suspend fun deleteAll() {
     postDao.deleteAll()
   }
+
+  override suspend fun getFavoritePostById(postId: Int): PostEntity? {
+    return postDao.getFavoritePostById(postId)
+  }
+
+  override suspend fun setPostAsFavorite(postId: Int, isFavorite: Boolean) {
+    postDao.setPostAsFavorite(postId, isFavorite)
+  }
 }

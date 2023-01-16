@@ -45,7 +45,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           app:layout_constraintBottom_toTopOf="@+id/tvAuthorUsername"
-          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintEnd_toStartOf="@id/ibFavorite"
           app:layout_constraintStart_toEndOf="@id/ivAuthorPicture"
           app:layout_constraintTop_toTopOf="parent"
           app:layout_constraintVertical_chainStyle="packed"
@@ -57,7 +57,7 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintBottom_toBottomOf="@id/ivAuthorPicture"
-          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintEnd_toEndOf="@id/tvAuthorName"
           app:layout_constraintStart_toStartOf="@id/tvAuthorName"
           app:layout_constraintTop_toBottomOf="@+id/tvAuthorName"
           tools:text="\@jhondoe" />
@@ -117,6 +117,17 @@
           android:textAlignment="center"
           android:ellipsize="end"
           tools:text="hildegard.org" />
+
+        <ImageButton
+          android:id="@+id/ibFavorite"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:padding="8dp"
+          android:src="@drawable/ic_favorite_border"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:tint="@color/gray" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -25,10 +25,10 @@ class ZemogaRepositoryImpl @Inject constructor(
     try {
 
       // Get all posts from local database
-      val localPosts = zemogaLocalDataSource.getAllPosts().first()
+      val lastUpdate: Long = zemogaLocalDataSource.getAllPosts().first().lastOrNull()?.createdAt ?: 0L
 
       // Check if the cache is valid
-      val cacheIsExpired = cacheIsExpired(localPosts.last().createdAt)
+      val cacheIsExpired = cacheIsExpired(lastUpdate)
 
       if (networkUtils.isInternetAvailable() && cacheIsExpired) {
         val response = zemogaRemoteDataSource.getPosts()
@@ -106,6 +106,25 @@ class ZemogaRepositoryImpl @Inject constructor(
     }
   }
 
+  override fun getLocalFavoritePostById(postId: Int): Flow<Result<Post?>> = flow {
+    try {
+      zemogaLocalDataSource.getFavoritePostById(postId)?.let { postEntity ->
+        emit(Result.Success(postDataMapper.mapEntityToPostDomain(postEntity)))
+      } ?: emit(Result.Success(null))
+    } catch (e: Exception) {
+      emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
+    }
+  }
+
+  override fun setPostAsFavorite(postId: Int, isFavorite: Boolean): Flow<Result<Boolean>> = flow {
+    try {
+      zemogaLocalDataSource.setPostAsFavorite(postId, isFavorite)
+      emit(Result.Success(true))
+    } catch (e: Exception) {
+      emit(Result.Error(DomainException(e.message ?: "Something went wrong")))
+    }
+  }
+
   private fun cacheIsExpired(lastUpdate: Long): Boolean {
     val currentTime = System.currentTimeMillis()
     val cacheTime = currentTime - lastUpdate
@@ -114,6 +133,6 @@ class ZemogaRepositoryImpl @Inject constructor(
   }
 
   companion object {
-    private val DEFAULT_REFRESH_RATE_MS = TimeUnit.MINUTES.toMillis(10)
+    private val DEFAULT_REFRESH_RATE_MS = TimeUnit.MINUTES.toMillis(60)
   }
 }

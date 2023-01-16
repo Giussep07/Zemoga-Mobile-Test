@@ -8,4 +8,6 @@ interface ZemogaLocalDataSource {
   suspend fun insert(post: PostEntity)
   suspend fun insertAll(postList: List<PostEntity>)
   suspend fun deleteAll()
+  suspend fun getFavoritePostById(postId: Int): PostEntity?
+  suspend fun setPostAsFavorite(postId: Int, isFavorite: Boolean)
 }

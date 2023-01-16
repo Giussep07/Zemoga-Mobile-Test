@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.giussepr.zemoga.R
 import com.giussepr.zemoga.databinding.FragmentPostDetailBinding
 import com.giussepr.zemoga.presentation.base.BaseFragment
 import com.giussepr.zemoga.presentation.postdetail.adapter.CommentAdapter
@@ -31,6 +32,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    viewModel.init(args.uiPost)
     viewModel.getAuthorInformation(args.uiPost.userId)
 
     setupAdapter()
@@ -39,6 +41,11 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
 
     observeUserInfoUiState()
     observeCommentUiState()
+    observePostSavedAsFavorite()
+
+    binding.ibFavorite.setOnClickListener {
+      viewModel.onFavoriteClicked(args.uiPost)
+    }
   }
 
   private fun setupAdapter() {
@@ -89,6 +96,16 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>() {
         is PostDetailViewModel.CommentsUiState.Error -> {
           binding.commentsProgressBar.isVisible = false
         }
+      }
+    }
+  }
+
+  private fun observePostSavedAsFavorite() {
+    viewModel.postIsFavorite.collectWhileResumed {
+      if (it) {
+        binding.ibFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_favorite_filled, requireContext().theme))
+      } else {
+        binding.ibFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_favorite_border, requireContext().theme))
       }
     }
   }

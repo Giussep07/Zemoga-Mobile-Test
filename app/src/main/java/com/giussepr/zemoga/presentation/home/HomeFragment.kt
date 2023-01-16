@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
   }
 
   private fun setAdapter() {
-    adapter = PostAdapter(onPostClickListener = this::onPostClicked).also {
+    adapter = PostAdapter(context = requireContext(), onPostClickListener = this::onPostClicked).also {
       binding.rvPosts.adapter = it
     }
   }
